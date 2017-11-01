@@ -25,6 +25,10 @@
 
 #pragma once
 
+#ifndef PARAM_LASERPROFILE
+#define PARAM_LASERPROFILE laserPlaneWave
+#endif
+
 
 namespace picongpu
 {
@@ -50,7 +54,7 @@ namespace picongpu
      *
      * Adjust the settings of the selected profile in laser.param
      */
-    namespace laserProfile = laserPlaneWave;
+    namespace laserProfile = PARAM_LASERPROFILE;
 
     /** @namespace fieldSolver
      *
