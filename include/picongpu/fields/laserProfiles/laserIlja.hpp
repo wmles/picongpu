@@ -28,33 +28,33 @@ namespace picongpu
 {
 /** Wavepaket with spacial gaussian envelope and complicated longitudinal shape.
  * Allows prepulse, and also defining ASE with three (t, intensity)-points, where time is counted from the very beginning and the intensity is in multiples of the main peak.
- *  
+ *
  *  _not_ including correction to laser formular derived from vector potential, so the integration
  *  along propagation direction gives 0
  *  this is (would be^^) important for few-cycle laser pulses
  */
 namespace laserIlja
-{    
+{
     // various computations 
     constexpr float_X laserTimeShift = laser::initPlaneY * CELL_HEIGHT / SPEED_OF_LIGHT;
     constexpr float_64 f = SPEED_OF_LIGHT / WAVE_LENGTH;
     constexpr float_64 w = 2.0 * PI * f;
     constexpr float_64 endUpramp = -0.5 * LASER_NOFOCUS_CONSTANT;
     constexpr float_64 startDownramp = 0.5 * LASER_NOFOCUS_CONSTANT;
-    
+
     // helper functions, called from laserLongitudinal
     float_X gauss(float_64 t)
     {
         return math::exp(-0.25 * (t / PULSE_LENGTH) * (t / PULSE_LENGTH));
     }
-    
+
     float_X extrapoliere(float_64 t1, float_X a1, float_64 t2, float_X a2, float_64 t)
     {
         float_X log1 = (t2 - t) * math::log(a1);
         float_X log2 = (t - t1) * math::log(a2);
         return math::exp((log1 + log2)/(t2 - t1));
     }
-    
+
     float_X get_envelope(float_64 runTime)
     {
         float_X env = 0.0;
@@ -68,7 +68,7 @@ namespace laserIlja
             env += AMP_PREPULSE * gauss(runTime - TIME_PREPULSE);
             if ((TIME_1 < runTime) and (runTime < TIME_2))
                 env += extrapoliere(TIME_1, AMP_1, TIME_2, AMP_2, runTime);
-            else 
+            else
                 env += extrapoliere(TIME_2, AMP_2, TIME_3, AMP_3, runTime);
         }
         else if (TIME_PEAKPULSE <= runTime) env = AMPLITUDE * gauss(runTime-TIME_PEAKPULSE);
@@ -93,15 +93,15 @@ namespace laserIlja
         const float_64 tau = PULSE_LENGTH * sqrt(2.0);
 
         phase += float_X(w * runTime) + LASER_PHASE ;
-        
+
         envelope = get_envelope(runTime);
 
-        
+
         float_64 correctionFactor = 0.0;
         /* I don't want to delete the correctionFactor and the old implementation using it.
          * Would be nice to use it, at least in the regions where gauss is dominating.
          */
-        
+
         /* if (runTime > startDownramp)
         {
             // downramp = end
