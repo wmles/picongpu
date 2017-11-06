@@ -35,7 +35,7 @@ namespace picongpu
  */
 namespace laserIlja
 {
-    // various computations 
+    // various computations
     constexpr float_X laserTimeShift = laser::initPlaneY * CELL_HEIGHT / SPEED_OF_LIGHT;
     constexpr float_64 f = SPEED_OF_LIGHT / WAVE_LENGTH;
     constexpr float_64 w = 2.0 * PI * f;
