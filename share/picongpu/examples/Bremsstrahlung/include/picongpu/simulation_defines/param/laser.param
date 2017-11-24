@@ -346,9 +346,9 @@ namespace laser
         // time-positions of prepulse and ASE
         constexpr float_64 TIME_PREPULSE_SI = 50.0e-15;
         constexpr float_64 TIME_PEAKPULSE_SI = 300.0e-15;
-        constexpr float_64 TIME_POINT_1_SI = 0.0; 
-        constexpr float_64 TIME_POINT_2_SI = 1.0e-15; 
-        constexpr float_64 TIME_POINT_3_SI = 200.0e-15; 
+        constexpr float_64 TIME_POINT_1_SI = 0.0;
+        constexpr float_64 TIME_POINT_2_SI = 1.0e-15;
+        constexpr float_64 TIME_POINT_3_SI = 200.0e-15;
 
         /** unit: meter */
         constexpr float_64 WAVE_LENGTH_SI = 0.8e-6;
