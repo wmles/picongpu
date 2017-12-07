@@ -319,39 +319,22 @@ constexpr float_64 W0z_SI = W0x_SI; // waist in z-direction
 constexpr float_X LASER_PHASE = 0.0; /* unit: rad, periodic in 2*pi */
 }
 
-namespace laserNone
-{
-namespace SI
-{
-/** unit: meter */
-constexpr float_64 WAVE_LENGTH_SI = 0.0;
-
-/** unit: Volt /meter */
-constexpr float_64 AMPLITUDE_SI = 0.0;
-
-constexpr float_64 PULSE_LENGTH_SI = 0.0;
-}
-}
-
-#ifndef PARAM_INT_3
-#define PARAM_INT_3 1.e-5
-#endif
-    namespace laserIlja
+    namespace laserExpRampWithPrepulse
     {
     // Intensities of prepulse and ASE
     constexpr float_X INT_RATIO_PREPULSE = 0.;
-    constexpr float_X INT_RATIO_POINT_1 = 1.e-5;//PARAM_INT_1;
-    constexpr float_X INT_RATIO_POINT_2 = 1.e-5;
-    constexpr float_X INT_RATIO_POINT_3 = PARAM_INT_3;
+    constexpr float_X INT_RATIO_POINT_1 = 1.e-8;
+    constexpr float_X INT_RATIO_POINT_2 = 1.e-4;
+    constexpr float_X INT_RATIO_POINT_3 = 1.e-4;
 
     namespace SI
     {
         // time-positions of prepulse and ASE
         constexpr float_64 TIME_PREPULSE_SI = 50.0e-15;
-        constexpr float_64 TIME_PEAKPULSE_SI = 300.0e-15;
+        constexpr float_64 TIME_PEAKPULSE_SI = 1000.0e-15;
         constexpr float_64 TIME_POINT_1_SI = 0.0;
-        constexpr float_64 TIME_POINT_2_SI = 1.0e-15;
-        constexpr float_64 TIME_POINT_3_SI = 200.0e-15;
+        constexpr float_64 TIME_POINT_2_SI = 700.0e-15;
+        constexpr float_64 TIME_POINT_3_SI = 900.0e-15;
 
         /** unit: meter */
         constexpr float_64 WAVE_LENGTH_SI = 0.8e-6;
@@ -382,7 +365,7 @@ constexpr float_64 PULSE_LENGTH_SI = 0.0;
          *  Info:             FWHM_of_Intensity = FWHM_Illumination
          *                      = what a experimentalist calls "pulse duration"
          *  unit: seconds (1 sigma) */
-        constexpr float_64 PULSE_LENGTH_SI = 3.0e-14 / 2.35482; // Hälfte der Zeit, in der E auf 1/e faellt (dann faellt I auf 1/2 nach 15fs, knapp 6 Wellenlaengen), das sind also ca. 4.8 Wellenlaengen
+        constexpr float_64 PULSE_LENGTH_SI = 3.0e-14 / 2.35482; // half of the time in which E falls to half its initial value (then I falls to half its value in 15fs, approx 6 wavelengths). Those are 4.8 wavelenghts.
 
         /** beam waist: distance from the axis where the pulse intensity (E^2)
          *              decreases to its 1/e^2-th part,
@@ -422,6 +405,19 @@ constexpr float_64 PULSE_LENGTH_SI = 0.0;
         constexpr PolarisationType Polarisation = LINEAR_X;
     }
 
+namespace laserNone
+{
+namespace SI
+{
+/** unit: meter */
+constexpr float_64 WAVE_LENGTH_SI = 0.0;
+
+/** unit: Volt /meter */
+constexpr float_64 AMPLITUDE_SI = 0.0;
+
+constexpr float_64 PULSE_LENGTH_SI = 0.0;
+}
+}
 
 }
 

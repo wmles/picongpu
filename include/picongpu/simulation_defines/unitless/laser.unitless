@@ -90,7 +90,7 @@ namespace picongpu
         constexpr float_X INIT_TIME = 0.0; //no inizialisation of laser
     }
 
-    namespace laserIlja
+    namespace laserExpRampWithPrepulse
     {
         //normed laser parameter
         constexpr float_X WAVE_LENGTH = float_X (SI::WAVE_LENGTH_SI / UNIT_LENGTH); //unit: meter
@@ -122,4 +122,4 @@ namespace picongpu
 #include "picongpu/fields/laserProfiles/laserPlaneWave.hpp"
 #include "picongpu/fields/laserProfiles/laserPolynom.hpp"
 #include "picongpu/fields/laserProfiles/laserNone.hpp"
-#include "picongpu/fields/laserProfiles/laserIlja.hpp"
+#include "picongpu/fields/laserProfiles/laserExpRampWithPrepulse.hpp"
