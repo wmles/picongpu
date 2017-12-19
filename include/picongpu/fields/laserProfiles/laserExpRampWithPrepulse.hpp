@@ -33,8 +33,8 @@ namespace picongpu
  * intensity (yes, intensity, not amplitude) is given in multiples of the main
  * peak.
  *
- * Be careful - problematic for few cycle pulses. Thought the rest is cloned 
- * from laserWavepacket, the correctionFactor is not included (this was a 
+ * Be careful - problematic for few cycle pulses. Thought the rest is cloned
+ * from laserWavepacket, the correctionFactor is not included (this was a
  * correction to the laser phase, which is necessary for very short pulses for
  * the field to be physically consistent. Since the analytical solution is only
  * implemented for the gaussian regime, and we have mostly exponential regimes
@@ -73,7 +73,7 @@ namespace laserExpRampWithPrepulse
         return math::exp((log1 + log2)/(t2 - t1));
     }
 
-    HDINLINE float_X 
+    HDINLINE float_X
     get_envelope(float_64 runTime)
     {
         float_X env = 0.0;
@@ -84,15 +84,15 @@ namespace laserExpRampWithPrepulse
         const bool during_first_exp = (TIME_1 < runTime) and (runTime < TIME_2);
         const bool after_peakpulse = (startDownramp <= runTime);
         if (not before_preupramp and before_start)
-            env = AMP_1 * gauss(runTime - 0.) + 
+            env = AMP_1 * gauss(runTime - 0.) +
                 AMP_PREPULSE * gauss(runTime - TIME_PREPULSE);
         else if (before_peakpulse)
         {
             const float_X ramp_when_peakpulse = extrapolate_expo(
-                TIME_2, 
-                AMP_2, 
-                TIME_3, 
-                AMP_3, 
+                TIME_2,
+                AMP_2,
+                TIME_3,
+                AMP_3,
                 endUpramp
             ) / AMPLITUDE;
             // if (ramp_when_peakpulse > 0.5) - I know, dead code :) didn't understand your comment about the other logging
@@ -102,23 +102,23 @@ namespace laserExpRampWithPrepulse
             env += AMP_PREPULSE * gauss(runTime - TIME_PREPULSE);
             if (during_first_exp)
                 env += extrapolate_expo(
-                    TIME_1, 
-                    AMP_1, 
-                    TIME_2, 
-                    AMP_2, 
+                    TIME_1,
+                    AMP_1,
+                    TIME_2,
+                    AMP_2,
                     runTime
                 );
             else
                 env += extrapolate_expo(
-                    TIME_2, 
-                    AMP_2, 
-                    TIME_3, 
-                    AMP_3, 
+                    TIME_2,
+                    AMP_2,
+                    TIME_3,
+                    AMP_3,
                     runTime
                     );
         }
-        else if (not after_peakpulse) 
-            env = AMPLITUDE; 
+        else if (not after_peakpulse)
+            env = AMPLITUDE;
     else // after startDownramp
             env = AMPLITUDE * gauss(runTime-startDownramp);
         return env;

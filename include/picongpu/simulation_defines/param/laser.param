@@ -384,9 +384,9 @@ namespace picongpu
     /* there and the intensity can be set as measured from the laser profile.
     /* Optionally a gaussian prepulse can be added, given by the parameters of
     /* the relative intersity and time point.
-    /* The time of the prepulse and the three preramp points are given in SI, 
+    /* The time of the prepulse and the three preramp points are given in SI,
     /* the intensities are given as multiples of the peak intensity.
- 
+
     // Intensities of prepulse and exponential preramp
     constexpr float_X INT_RATIO_PREPULSE = 0.;
     constexpr float_X INT_RATIO_POINT_1 = 1.e-8;
