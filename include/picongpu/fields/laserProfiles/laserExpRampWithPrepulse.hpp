@@ -119,7 +119,7 @@ namespace laserExpRampWithPrepulse
         }
         else if (not after_peakpulse) 
             env = AMPLITUDE; 
-	else // after startDownramp
+    else // after startDownramp
             env = AMPLITUDE * gauss(runTime-startDownramp);
         return env;
     }
