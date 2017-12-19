@@ -26,19 +26,21 @@
 
 namespace picongpu
 {
-/** Wavepaket with spacial gaussian envelope and complicated longitudinal shape.
- * Allows defining a prepulse and two regions of exponential preramp with inde-
- * pendent slopes. The definition works by specifying three (t, intensity)-
- * -points, where time is counted from the very beginning in SI and the inten-
- * sity (yes, intensity, not amplitude) is given in multiples of the main peak.
+/** Wavepacket with spatial gaussian envelope and adjustable temporal shape.
+ * Allows defining a prepulse and two regions of exponential preramp with
+ * independent slopes. The definition works by specifying three (t, intensity)-
+ * points, where time is counted from the very beginning in SI and the
+ * intensity (yes, intensity, not amplitude) is given in multiples of the main
+ * peak.
  *
- * care! Problematic for few cycle laser pulses. Thought the rest is cloned 
+ * Be careful - problematic for few cycle pulses. Thought the rest is cloned 
  * from laserWavepacket, the correctionFactor is not included (this was a 
  * correction to the laser phase, which is necessary for very short pulses for
- * the field to be physically consistent. Since I know the analytical solution
- * only for the gaussian regime, and we have mostly exponential regimes here, 
- * I dropped it.
+ * the field to be physically consistent. Since the analytical solution is only
+ * implemented for the gaussian regime, and we have mostly exponential regimes
+ * here, it was not retained here.
  */
+
 namespace laserExpRampWithPrepulse
 {
     constexpr float_X laserTimeShift = laser::initPlaneY * CELL_HEIGHT /
@@ -50,15 +52,15 @@ namespace laserExpRampWithPrepulse
     constexpr float_64 startDownramp = TIME_PEAKPULSE +
         0.5 * LASER_NOFOCUS_CONSTANT;
 
-    // helper functions, called from laserLongitudinal
     HDINLINE float_X
     gauss(float_64 t)
     {
         return math::exp(-0.25 * (t / PULSE_LENGTH) * (t / PULSE_LENGTH));
     }
 
+    // get value of exponential curve through two points at given t
     HDINLINE float_X
-    extrapolate(
+    extrapolate_expo(
         float_64 t1,
         float_X a1,
         float_64 t2,
@@ -86,7 +88,7 @@ namespace laserExpRampWithPrepulse
                 AMP_PREPULSE * gauss(runTime - TIME_PREPULSE);
         else if (before_peakpulse)
         {
-            float_X ramp_when_peakpulse = extrapolate(
+            const float_X ramp_when_peakpulse = extrapolate_expo(
                 TIME_2, 
                 AMP_2, 
                 TIME_3, 
@@ -99,7 +101,7 @@ namespace laserExpRampWithPrepulse
             env += AMPLITUDE * (1.-ramp_when_peakpulse) * gauss(runTime-endUpramp);
             env += AMP_PREPULSE * gauss(runTime - TIME_PREPULSE);
             if (during_first_exp)
-                env += extrapolate(
+                env += extrapolate_expo(
                     TIME_1, 
                     AMP_1, 
                     TIME_2, 
@@ -107,7 +109,7 @@ namespace laserExpRampWithPrepulse
                     runTime
                 );
             else
-                env += extrapolate(
+                env += extrapolate_expo(
                     TIME_2, 
                     AMP_2, 
                     TIME_3, 
@@ -182,7 +184,4 @@ namespace laserExpRampWithPrepulse
 
 }
 }
-
-
-
 
