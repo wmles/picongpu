@@ -34,11 +34,13 @@ namespace picongpu
  * peak.
  *
  * Be careful - problematic for few cycle pulses. Thought the rest is cloned
- * from laserWavepacket, the correctionFactor is not included (this was a
- * correction to the laser phase, which is necessary for very short pulses for
- * the field to be physically consistent. Since the analytical solution is only
- * implemented for the gaussian regime, and we have mostly exponential regimes
- * here, it was not retained here.
+ * from laserWavepacket, the correctionFactor is not included (this made a
+ * correction to the laser phase, which is necessary for very short pulses, 
+ * since otherwise the field is not a solution to the the free Maxwell Eq.; so
+ * that in particular a test particle is, after the laser pulse has passed, 
+ * not returned to immobility, as it should. Since the analytical solution is 
+ * only implemented for the gaussian regime, and we have mostly exponential 
+ * regimes here, it was not retained here.
  */
 
 namespace laserExpRampWithPrepulse
