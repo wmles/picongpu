@@ -61,7 +61,7 @@ namespace laserExpRampWithPrepulse
     HDINLINE float_X
     gauss( float_X const t )
     {
-        float_X const exponent = t / float_X( PULSE_LENGTH )
+        float_X const exponent = t / float_X( PULSE_LENGTH );
         return math::exp( float_X( -0.25 ) * exponent * exponent );
     }
 
