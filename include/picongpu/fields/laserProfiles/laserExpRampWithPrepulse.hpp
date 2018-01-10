@@ -92,16 +92,22 @@ namespace laserExpRampWithPrepulse
         const bool during_first_exp = ( TIME_1 < runTime ) and
             ( runTime < TIME_2 );
         const bool after_peakpulse = ( startDownramp <= runTime );
+        float_X const AMP_1_dev = AMP_1;
+        float_X const AMP_2_dev = AMP_2;
+        float_X const AMP_3_dev = AMP_3;
+
         if ( not before_preupramp and before_start )
-            env = AMP_1 * gauss( runTime ) +
+        {
+            env = AMP_1_dev * gauss( runTime ) +
                 AMP_PREPULSE * gauss( runTime - TIME_PREPULSE );
+        }
         else if ( before_peakpulse )
         {
             const float_X ramp_when_peakpulse = extrapolate_expo(
                 TIME_2,
-                AMP_2,
+                AMP_2_dev,
                 TIME_3,
-                AMP_3,
+                AMP_3_dev,
                 endUpramp
             ) / AMPLITUDE;
             // if (ramp_when_peakpulse > 0.5) - I know, dead code :) didn't understand your comment about the other logging
@@ -113,17 +119,17 @@ namespace laserExpRampWithPrepulse
             if ( during_first_exp )
                 env += extrapolate_expo(
                     TIME_1,
-                    AMP_1,
+                    AMP_1_dev,
                     TIME_2,
-                    AMP_2,
+                    AMP_2_dev,
                     runTime
                 );
             else
                 env += extrapolate_expo(
                     TIME_2,
-                    AMP_2,
+                    AMP_2_dev,
                     TIME_3,
-                    AMP_3,
+                    AMP_3_dev,
                     runTime
                     );
         }
