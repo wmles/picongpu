@@ -17,8 +17,6 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-
 #pragma once
 
 #include "picongpu/simulation_defines.hpp"
@@ -65,8 +63,9 @@ namespace laserExpRampWithPrepulse
         return math::exp( float_X( -0.25 ) * exponent * exponent );
     }
 
-    // get value of exponential curve through two points at given t
-    // t/t1/t2 given as float_X, since the envelope doesn't need the accuracy
+    /** get value of exponential curve through two points at given t
+     * t/t1/t2 given as float_X, since the envelope doesn't need the accuracy
+     */
     HDINLINE float_X
     extrapolate_expo(
         float_X const t1,
@@ -93,7 +92,7 @@ namespace laserExpRampWithPrepulse
             ( runTime < TIME_2 );
         const bool after_peakpulse = startDownramp <= runTime;
 
-        if ( ! before_preupramp && before_start )
+        if ( !before_preupramp && before_start )
         {
             env = AMP_1 * gauss( runTime ) +
                 AMP_PREPULSE * gauss( runTime - TIME_PREPULSE );
@@ -110,7 +109,7 @@ namespace laserExpRampWithPrepulse
             // if (ramp_when_peakpulse > 0.5) - I know, dead code :) didn't understand your comment about the other logging
             //    throw std::invalid_argument("\n\nAttention, the intensities of the ramp are very large, the extrapolation to the time of the main pulse would give more than 50% of the pulse amplitude - this is not a gaussian pulse at all anymore, probably something wrong?!\n");
 
-            env += AMPLITUDE * ( 1. - ramp_when_peakpulse ) *
+            env += AMPLITUDE * ( float_X( 1. ) - ramp_when_peakpulse ) *
                 gauss( runTime - endUpramp );
             env += AMP_PREPULSE * gauss( runTime - TIME_PREPULSE );
             if ( during_first_exp )
@@ -128,9 +127,9 @@ namespace laserExpRampWithPrepulse
                     TIME_3,
                     AMP_3,
                     runTime
-                    );
+                );
         }
-        else if ( ! after_peakpulse )
+        else if ( !after_peakpulse )
             env = AMPLITUDE;
     else // after startDownramp
             env = AMPLITUDE * gauss( runTime - startDownramp );
