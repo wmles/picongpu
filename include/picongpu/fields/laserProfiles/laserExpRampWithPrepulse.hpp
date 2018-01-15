@@ -106,8 +106,10 @@ namespace laserExpRampWithPrepulse
                 AMP_3,
                 endUpramp
             ) / AMPLITUDE;
-            // if (ramp_when_peakpulse > 0.5) - I know, dead code :) didn't understand your comment about the other logging
-            //    throw std::invalid_argument("\n\nAttention, the intensities of the ramp are very large, the extrapolation to the time of the main pulse would give more than 50% of the pulse amplitude - this is not a gaussian pulse at all anymore, probably something wrong?!\n");
+            PMACC_ASSERT_MSG(
+                ramp_when_peakpulse > 0.5, 
+                "\nAttention, the intensities of the ramp are very large, the extrapolation to the time of the main pulse would give more than 50% of the pulse amplitude - this is not a gaussian pulse at all anymore, probably something wrong?!\n"
+            );
 
             env += AMPLITUDE * ( float_X( 1. ) - ramp_when_peakpulse ) *
                 gauss( runTime - endUpramp );
