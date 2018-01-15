@@ -84,11 +84,6 @@ namespace laserExpRampWithPrepulse
     HINLINE float_X
     get_envelope(float_X runTime)
     {
-        const float_X AMP_PREPULSE = float_X( math::sqrt( INT_RATIO_PREPULSE ) * AMPLITUDE );
-        const float_X AMP_1 = float_X( math::sqrt( INT_RATIO_POINT_1 ) * AMPLITUDE );
-        const float_X AMP_2 = float_X( math::sqrt( INT_RATIO_POINT_2 ) * AMPLITUDE );
-        const float_X AMP_3 = float_X( math::sqrt( INT_RATIO_POINT_3 ) * AMPLITUDE );
-
         float_X env = 0.0;
         const bool before_preupramp = ( float_X( -0.5 * RAMP_INIT *
             PULSE_LENGTH ) > runTime );
