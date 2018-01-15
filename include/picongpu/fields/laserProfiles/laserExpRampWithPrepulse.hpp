@@ -66,7 +66,7 @@ namespace laserExpRampWithPrepulse
     }
 
     // get value of exponential curve through two points at given t
-    // t/t1/t2 are downcasted to float_X, envelope doesn't need the accuracy
+    // t/t1/t2 given as float_X, since the envelope doesn't need the accuracy
     HDINLINE float_X
     extrapolate_expo(
         float_X const t1,
@@ -78,36 +78,38 @@ namespace laserExpRampWithPrepulse
     {
         const float_X log1 = ( t2 - t ) * math::log( a1 );
         const float_X log2 = ( t - t1 ) * math::log( a2 );
-        return math::exp(( log1 + log2 )/( t2 - t1 ));
+        return math::exp( ( log1 + log2 )/( t2 - t1 ) );
     }
 
-    HDINLINE float_X
+    HINLINE float_X
     get_envelope(float_X runTime)
     {
+        const float_X AMP_PREPULSE = float_X( math::sqrt( INT_RATIO_PREPULSE ) * AMPLITUDE );
+        const float_X AMP_1 = float_X( math::sqrt( INT_RATIO_POINT_1 ) * AMPLITUDE );
+        const float_X AMP_2 = float_X( math::sqrt( INT_RATIO_POINT_2 ) * AMPLITUDE );
+        const float_X AMP_3 = float_X( math::sqrt( INT_RATIO_POINT_3 ) * AMPLITUDE );
+
         float_X env = 0.0;
         const bool before_preupramp = ( float_X( -0.5 * RAMP_INIT *
             PULSE_LENGTH ) > runTime );
-        const bool before_start = ( runTime < 0. );
-        const bool before_peakpulse = ( runTime < endUpramp );
-        const bool during_first_exp = ( TIME_1 < runTime ) and
+        const bool before_start = runTime < 0.;
+        const bool before_peakpulse = runTime < endUpramp;
+        const bool during_first_exp = ( TIME_1 < runTime ) &&
             ( runTime < TIME_2 );
-        const bool after_peakpulse = ( startDownramp <= runTime );
-        float_X const AMP_1_dev = AMP_1;
-        float_X const AMP_2_dev = AMP_2;
-        float_X const AMP_3_dev = AMP_3;
+        const bool after_peakpulse = startDownramp <= runTime;
 
-        if ( not before_preupramp and before_start )
+        if ( ! before_preupramp && before_start )
         {
-            env = AMP_1_dev * gauss( runTime ) +
+            env = AMP_1 * gauss( runTime ) +
                 AMP_PREPULSE * gauss( runTime - TIME_PREPULSE );
         }
         else if ( before_peakpulse )
         {
             const float_X ramp_when_peakpulse = extrapolate_expo(
                 TIME_2,
-                AMP_2_dev,
+                AMP_2,
                 TIME_3,
-                AMP_3_dev,
+                AMP_3,
                 endUpramp
             ) / AMPLITUDE;
             // if (ramp_when_peakpulse > 0.5) - I know, dead code :) didn't understand your comment about the other logging
@@ -119,21 +121,21 @@ namespace laserExpRampWithPrepulse
             if ( during_first_exp )
                 env += extrapolate_expo(
                     TIME_1,
-                    AMP_1_dev,
+                    AMP_1,
                     TIME_2,
-                    AMP_2_dev,
+                    AMP_2,
                     runTime
                 );
             else
                 env += extrapolate_expo(
                     TIME_2,
-                    AMP_2_dev,
+                    AMP_2,
                     TIME_3,
-                    AMP_3_dev,
+                    AMP_3,
                     runTime
                     );
         }
-        else if ( not after_peakpulse )
+        else if ( ! after_peakpulse )
             env = AMPLITUDE;
     else // after startDownramp
             env = AMPLITUDE * gauss( runTime - startDownramp );
@@ -143,7 +145,7 @@ namespace laserExpRampWithPrepulse
     HINLINE float3_X laserLongitudinal(uint32_t currentStep, float_X& phase)
     {
         float_X envelope;
-        float3_X elong( float3_X::create( 0.0 ));
+        float3_X elong( float3_X::create( 0.0 ) );
 
         // a symmetric pulse will be initialized at position z=0 for
         // a time of RAMP_INIT * PULSE_LENGTH + LASER_NOFOCUS_CONSTANT = INIT_TIME.
@@ -154,7 +156,7 @@ namespace laserExpRampWithPrepulse
          * in time
          */
         const float_64 runTime = (DELTA_T * currentStep - laserTimeShift -
-            0.5 * RAMP_INIT * PULSE_LENGTH);
+            0.5 * RAMP_INIT * PULSE_LENGTH );
 
         phase += float_X( w * runTime ) + LASER_PHASE ;
 
@@ -163,16 +165,16 @@ namespace laserExpRampWithPrepulse
 
         if( Polarisation == LINEAR_X )
         {
-            elong.x() = float_X(envelope * (math::sin(phase)));
+            elong.x() = float_X( envelope * ( math::sin( phase ) ) );
         }
         else if( Polarisation == LINEAR_Z )
         {
-            elong.z() = float_X(envelope * (math::sin(phase)));
+            elong.z() = float_X( envelope * ( math::sin( phase ) ) );
         }
         else if( Polarisation == CIRCULAR )
         {
-            elong.x() = float_X(envelope / sqrt(2.0) * (math::sin(phase)));
-            elong.z() = float_X(envelope / sqrt(2.0) * (math::cos(phase)));
+            elong.x() = float_X( envelope / sqrt( 2.0 ) * ( math::sin( phase ) ) );
+            elong.z() = float_X( envelope / sqrt( 2.0 ) * ( math::cos( phase ) ) );
         }
 
         return elong;
