@@ -24,7 +24,7 @@
 
 namespace picongpu
 {
-/** Wavepacket with spatial gaussian envelope and adjustable temporal shape.
+/** Wavepacket with spatial Gaussian envelope and adjustable temporal shape.
  * Allows defining a prepulse and two regions of exponential preramp with
  * independent slopes. The definition works by specifying three (t, intensity)-
  * points, where time is counted from the very beginning in SI and the
@@ -37,7 +37,7 @@ namespace picongpu
  * since otherwise the field is not a solution to the the free Maxwell Eq.; so
  * that in particular a test particle is, after the laser pulse has passed,
  * not returned to immobility, as it should. Since the analytical solution is
- * only implemented for the gaussian regime, and we have mostly exponential
+ * only implemented for the Gaussian regime, and we have mostly exponential
  * regimes here, it was not retained here.
  */
 
@@ -47,12 +47,8 @@ namespace laserExpRampWithPrepulse
         SPEED_OF_LIGHT;
     constexpr float_64 f = SPEED_OF_LIGHT / WAVE_LENGTH;
     constexpr float_64 w = 2.0 * PI * f;
-    constexpr float_X endUpramp = TIME_PEAKPULSE -
-        0.5 * LASER_NOFOCUS_CONSTANT;
-    constexpr float_X startDownramp = TIME_PEAKPULSE +
-        0.5 * LASER_NOFOCUS_CONSTANT;
 
-    /** takes time t relative to the center of the gaussian and returns value
+    /** takes time t relative to the center of the Gaussian and returns value
      * between 0 and 1, i.e. as multiple of the max value.
      * use as: amp_t = amp_0 * gauss( t - t_0 )
      */
@@ -106,10 +102,6 @@ namespace laserExpRampWithPrepulse
                 AMP_3,
                 endUpramp
             ) / AMPLITUDE;
-            PMACC_ASSERT_MSG(
-                ramp_when_peakpulse > 0.5, 
-                "\nAttention, the intensities of the ramp are very large, the extrapolation to the time of the main pulse would give more than 50% of the pulse amplitude - this is not a gaussian pulse at all anymore, probably something wrong?!\n"
-            );
 
             env += AMPLITUDE * ( float_X( 1. ) - ramp_when_peakpulse ) *
                 gauss( runTime - endUpramp );
@@ -177,7 +169,9 @@ namespace laserExpRampWithPrepulse
     }
 
     /**
-     *
+     * takes the 3-component-vector elong of the E-field (computed for the
+     * current timestep), and the x- and z-position and returns this elong
+     * modulated by an isotropic Gaussian in transversal direction. 
      * @param elong
      * @param phase
      * @param posX
