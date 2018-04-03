@@ -1,0 +1,4 @@
+/home/goethe93/paramSets/RampOnLCT/bin/picongpu
+/home/goethe93/paramSets/RampOnLCT/bin/cuda_memtest.sh
+/home/goethe93/paramSets/RampOnLCT/bin/cuda_memtest
+/home/goethe93/paramSets/RampOnLCT/bin/mpiInfo
