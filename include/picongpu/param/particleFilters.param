@@ -28,53 +28,6 @@ namespace particles
 {
 namespace filter
 {
-    struct FunctorParticlesForwardPinhole
-    {
-        static constexpr char const * name = "fwPinhole";
-        static constexpr float_X openingAngle_degrees()
-        {
-             return 4.5;
-        }
-        
-        template< typename T_Particle >
-        HDINLINE bool operator()(
-            T_Particle const & particle
-        )
-        {
-            bool result = false;
-            float3_X const mom = particle[ momentum_ ];
-            float_X const absMom = math::abs( mom );
-
-            if( absMom > float_X( 0. ) )
-            {
-                /* place detector in y direction, "infinite distance" to target,
-                 * and five degree opening angle
-                 */
-                constexpr float_X openingAngle =
-                    openingAngle_degrees() * PI / 180.;
-                float_X const dotP = mom.y() / absMom;
-                float_X const degForw = math::acos( dotP );
-
-                if( math::abs( degForw ) <= openingAngle * float_X( 0.5 ) )
-                    result = true;
-            }
-            return result;
-        }
-    };
-    struct FunctorParticlesForwardRCF : FunctorParticlesForwardPinhole
-    {
-        static constexpr char const * name = "fwRCF";
-        constexpr float_X openingAngle_degrees() const
-        {
-             return 30.0;
-        }
-    };
-    using ParticlesForwardRCF = generic::Free<
-      FunctorParticlesForwardRCF
-    >;
-    using ParticlesForwardPinhole = generic::Free<
-      FunctorParticlesForwardPinhole
-    >;
 
     //! warning: only works in 2D; use FreeGlobalDomainPosition in 3D
     struct FunctorRelativeGlobalPositionLaserAxis
@@ -103,8 +56,6 @@ namespace filter
      */
     using AllParticleFilters = MakeSeq_t<
         All,
-        ParticlesForwardPinhole,
-        ParticlesForwardRCF,
         RelativeGlobalPositionLaserAxis
     >;
 
