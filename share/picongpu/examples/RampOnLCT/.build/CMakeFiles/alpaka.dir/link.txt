@@ -1,2 +1,0 @@
-/usr/bin/ar qc libalpaka.a  CMakeFiles/alpaka.dir/home/goethe93/code/thirdParty/alpaka/include/alpaka/core/Dummy.cpp.o
-/usr/bin/ranlib libalpaka.a
