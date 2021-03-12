@@ -21,6 +21,7 @@
 #pragma once
 
 #include "picongpu/fields/laserProfiles/ExpRampWithPrepulse.def"
+#include "picongpu/fields/laserProfiles/DivPulses.def"
 #include "picongpu/fields/laserProfiles/GaussianBeam.def"
 #include "picongpu/fields/laserProfiles/None.def"
 #include "picongpu/fields/laserProfiles/PlaneWave.def"
